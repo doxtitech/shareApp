@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'dart:typed_data';
 
 void main() => runApp(MyApp());
 
@@ -32,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription _intentDataStreamSubscription;
   String _sharedText = '';
   String _sharedFile = '';
+  File testFile;
 
   TextEditingController _textFieldController = new TextEditingController();
   var te = false;
@@ -47,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _sharedFile = '';
           try {
             _sharedFile = value[0].path;
+            testFile = new File(_sharedFile);
           } catch (err) {
             //
           }
@@ -62,6 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _sharedFile = '';
           _sharedFile = value[0].path;
+          print('start2');
+          print(value);
+          print('end2');
           te = true;
         });
       }
@@ -117,14 +124,24 @@ class _MyHomePageState extends State<MyHomePage> {
         ? Container(
             child: Column(
               children: [
+                Text(_sharedFile),
                 Text(
                   'Shared Image:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                new Image.asset(
-                  _sharedFile,
-                  fit: BoxFit.cover,
-                ),
+                testFile.existsSync()
+                    ? Image.memory(
+                        Uint8List.fromList(testFile.readAsBytesSync()),
+                        alignment: Alignment.center,
+                        height: 200,
+                        width: 200,
+                        fit: BoxFit.contain,
+                      )
+                    : Container(),
+                // new Image.asset(
+                //   _sharedFile,
+                //   fit: BoxFit.cover,
+                // ),
               ],
             ),
           )
