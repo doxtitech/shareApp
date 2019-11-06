@@ -66,9 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _sharedFile = '';
           _sharedFile = value[0].path;
-          print('start2');
-          print(value);
-          print('end2');
+          testFile = new File(_sharedFile);
           te = true;
         });
       }
